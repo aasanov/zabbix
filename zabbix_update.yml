@@ -1,0 +1,32 @@
+---
+- hosts: all
+  gather_facts: true
+  become: true
+  tasks:
+  - name: intall zabbix repo
+    yum:
+      name: https://repo.zabbix.com/zabbix/5.0/rhel/8/x86_64/zabbix-agent2-5.0.9-1.el8.x86_64.rpm
+      state: present
+
+  - name: install zabbix agent
+    yum:
+      name: zabbix-agent
+      state: present 
+
+  - name: update file /etc/zabbix/zabbix_agent2.conf
+    copy:
+      src: /etc/ansible/zabbix_agent2.conf
+      dest: /etc/zabbix/zabbix_agent2.conf
+      remote_src: true
+      owner: root
+      group: root
+      mode: 0644
+    register: result
+
+  - debug:
+      var: result
+
+  - name: stop zabbix service
+    service:
+      name: zabbix-agent
+      state: restarted

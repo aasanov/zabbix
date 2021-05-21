@@ -1,0 +1,10 @@
+---
+- hosts: all:!windows
+  name: Restart Checker
+  any_errors_fatal: true
+  become: true
+  tasks:
+  - name: restart the Zabbix Agent
+    service:
+      name: zabbix-agent
+      state: restarted
